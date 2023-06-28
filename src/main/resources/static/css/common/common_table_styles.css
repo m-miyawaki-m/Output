@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+.container {
+	display: flex;
+}
+
+.table-container {
+	flex: 1;
+	height: auto;
+	width: 100%;
+	margin: 20px;
+}
+
+th,
+td {
+	border: solid 1px;
+	/* 枠線指定 */
+}
+
+table {
+	border-collapse: collapse;
+	/* セルの線を重ねる */
+}
