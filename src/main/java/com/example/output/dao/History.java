@@ -1,4 +1,4 @@
-package com.example.output;
+package com.example.output.dao;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

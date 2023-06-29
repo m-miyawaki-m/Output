@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.output.dao.ErrorHistory;
+import com.example.output.dao.History;
+
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-
 public class GameController {
 	@Autowired
 	HttpSession session;
@@ -28,7 +30,7 @@ public class GameController {
 		int answer = rnd.nextInt(100) + 1;
 		session.setAttribute("answer", answer);
 		System.out.println("answer=" + answer);
-		return "game";
+		return "/game/game";
 	}
 
 	@PostMapping("/challenge")
@@ -39,15 +41,15 @@ public class GameController {
 		@SuppressWarnings("unchecked")
 		List<History> histories = (List<History>) session.getAttribute("histories");
 		@SuppressWarnings("unchecked")
-		List<History> histories2 = (List<History>) session.getAttribute("histories2");
+		List<ErrorHistory> errorHistories = (List<ErrorHistory>) session.getAttribute("errorHistories");
 		if (histories == null) {
 			histories = new ArrayList<>();
 			session.setAttribute("histories", histories);
 		}
 		
-		if (histories2 == null) {
-			histories2 = new ArrayList<>();
-			session.setAttribute("histories2", histories2);
+		if (errorHistories == null) {
+			errorHistories = new ArrayList<>();
+			session.setAttribute("errorHistories", errorHistories);
 		}
 		
 		int num = 0;
@@ -62,25 +64,28 @@ public class GameController {
 			}
 
 		} catch (NumberFormatException num_error) {
-			histories2.add(new History(histories2.size() + 1, num, "もっと小さいです"));
+			errorHistories.add(new ErrorHistory(errorHistories.size() + 1, ""+num_error, "エラーです"));
 
 		}
 
-		Map<String,List<History>> map = new HashMap<>();
-		map.put("1",histories);
-		map.put("2",histories2);
-		return gameView(map);
+		Map<String, List<History>> dao1Map = new HashMap<>();
+		dao1Map.put("1", histories);
+
+		Map<String, List<ErrorHistory>> dao2Map = new HashMap<>();
+		dao2Map.put("1", errorHistories);
+
+		return gameView(dao1Map, dao2Map);
 	}
 	
 	
 	/*
 	 * 表示作成用メソッド
 	 */
-	public static ModelAndView gameView(Map<String,List<History>> map) {
+	public ModelAndView gameView(Map<String, List<History>> dao1Map, Map<String, List<ErrorHistory>> dao2Map) {
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("histories", map.get("1"));
-		mv.addObject("histories2", map.get("2"));
-		mv.setViewName("game");
+		mv.addObject("histories", dao1Map.get("1"));
+		mv.addObject("errorHistories", dao2Map.get("1"));
+		mv.setViewName("/game/game");
 		return mv;
 	}
 	

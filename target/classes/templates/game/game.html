@@ -6,6 +6,7 @@
 	<title>数あてゲーム</title>
 
 	<link rel="stylesheet" href="/css/common/common_table_styles.css">
+	<script src="/js/common/table/table_color.js"></script>
 </head>
 
 <body>
@@ -21,7 +22,7 @@
 	<hr>
 	<div class="container">
 		<div class="table-container">
-			<table>
+			<table onmousemove="mouseMove(event)" onmouseleave="mouseOut(event)">
 				<thead>
 					<tr>
 						<th>回数</th>
@@ -50,9 +51,9 @@
 				</thead>
 				<tbody>
 					<!-- テーブル2のデータ -->
-					<tr th:each="h:${histories2}">
+					<tr th:each="h:${errorHistories}">
 						<td th:text="${h.seq}"></td>
-						<td th:text="${h.yourAnswer}"></td>
+						<td th:text="${h.error}"></td>
 						<td th:text="${h.result}"></td>
 					</tr>
 				</tbody>
